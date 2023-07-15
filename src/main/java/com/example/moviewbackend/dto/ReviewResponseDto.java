@@ -9,10 +9,11 @@ import lombok.Getter;
 @Builder
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
 public class ReviewResponseDto {
+    private String movieTitle;
     private Long reviewId;
     private String nickname;
     private String content;
-//    private int likesCount;
+    //    private int likesCount;
 //    private int commentsCount;
     private float star;
 }

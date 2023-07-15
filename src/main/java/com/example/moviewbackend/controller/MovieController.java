@@ -1,10 +1,10 @@
 package com.example.moviewbackend.controller;
 
 import com.example.moviewbackend.dto.MovieResponseDto;
-import com.example.moviewbackend.dto.TopMovieResponseDto;
 import com.example.moviewbackend.service.MovieService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -26,4 +26,12 @@ public class MovieController {
         return movieService.getMovies();
     }
 
+    /**
+     * 영화 상세 조회
+     * @return id에 해당하는 MovieResponseDto 반환
+     */
+    @GetMapping("/{id}")
+    public MovieResponseDto getMovie(@PathVariable Long id) {
+        return movieService.getMovie(id);
+    }
 }

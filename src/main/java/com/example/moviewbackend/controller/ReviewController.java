@@ -25,4 +25,17 @@ public class ReviewController {
         return reviewService.createReview(movieId, requestDto);
     }
 
+    /**
+     * 리뷰 수정
+     * @param movieId
+     * @param id
+     * @param requestDto
+     * @return
+     */
+    @PutMapping("/{id}")
+    public ResponseEntity<ReviewResponseDto> updateReview(@PathVariable Long movieId,
+                                                          @PathVariable Long id,
+                                                          @RequestBody ReviewRequestDto requestDto) {
+        return reviewService.updateReview(movieId, id, requestDto);
+    }
 }

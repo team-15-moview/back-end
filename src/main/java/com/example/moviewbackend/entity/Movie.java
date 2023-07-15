@@ -20,7 +20,7 @@ public class Movie {
 
     @Column(nullable = false)
     @Temporal(TemporalType.DATE)
-    private LocalDate releasedDate;
+    private LocalDate openDate;
 
     @Column(nullable = false)
     private String director;

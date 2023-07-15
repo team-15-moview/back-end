@@ -1,6 +1,5 @@
 package com.example.moviewbackend.repository;
 
-import com.example.moviewbackend.dto.MovieResponseDto;
 import com.example.moviewbackend.entity.Movie;
 import org.springframework.data.jpa.repository.JpaRepository;
 

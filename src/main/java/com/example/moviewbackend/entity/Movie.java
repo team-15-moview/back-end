@@ -3,6 +3,9 @@ package com.example.moviewbackend.entity;
 import jakarta.persistence.*;
 import lombok.Getter;
 
+import java.sql.Date;
+import java.time.LocalDate;
+
 @Entity
 @Getter
 @Table(name = "movies")
@@ -16,7 +19,8 @@ public class Movie {
     private String title;
 
     @Column(nullable = false)
-    private String pubDate;
+    @Temporal(TemporalType.DATE)
+    private LocalDate releasedDate;
 
     @Column(nullable = false)
     private String director;

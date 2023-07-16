@@ -1,7 +1,7 @@
 package com.example.moviewbackend.handler;
 
-import com.example.moviewbackend.exception.CustomResponseException;
 import com.example.moviewbackend.dto.CommonResponseDto;
+import com.example.moviewbackend.exception.CustomResponseException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;

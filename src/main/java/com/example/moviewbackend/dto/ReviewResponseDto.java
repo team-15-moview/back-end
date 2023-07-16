@@ -13,7 +13,7 @@ public class ReviewResponseDto {
     private Long reviewId;
     private String nickname;
     private String content;
-    //    private int likesCount;
+    private int likesCount;
 //    private int commentsCount;
     private float star;
 }

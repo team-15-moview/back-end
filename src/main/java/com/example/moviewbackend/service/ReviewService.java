@@ -1,5 +1,6 @@
 package com.example.moviewbackend.service;
 
+import com.example.moviewbackend.dto.CommonResponseDto;
 import com.example.moviewbackend.exception.CustomResponseException;
 import com.example.moviewbackend.dto.ReviewRequestDto;
 import com.example.moviewbackend.dto.ReviewResponseDto;
@@ -21,10 +22,10 @@ public class ReviewService {
     private final UserService userService;
 
     public ResponseEntity<ReviewResponseDto> createReview(Long movieId, ReviewRequestDto requestDto) {
-        // 해당 영화가 있는지 확인
+        // 영화 가져오기
         Movie movie = movieService.findMovie(movieId);
 
-        // 유저 가져오기
+        // 사용자 가져오기 -> 나중에 userdetail로 바꾸기
         User user = userService.findUser(requestDto.getUser_id());
 
         // 리뷰 생성
@@ -46,10 +47,11 @@ public class ReviewService {
 
     @Transactional
     public ResponseEntity<ReviewResponseDto> updateReview(Long movieId, Long id, ReviewRequestDto requestDto) {
-        // 해당 리뷰가 존재하는지 확인
+        // 리뷰 가져오기
         Review review = findReview(movieId, id);
 
-        // 작성자가 맞는지 확인
+        // 요청한 사용자 가져오기 -> 나중에 userdetail로 바꾸기
+        // 작성자 맞는지 확인
         if (!review.getUser().getId().equals(requestDto.getUser_id())) { // 임시로 아이디로 확인
             throw new CustomResponseException(HttpStatus.FORBIDDEN, "작성자만 수정할 수 있습니다.");
         }
@@ -68,9 +70,26 @@ public class ReviewService {
         return ResponseEntity.status(200).body(responseDto);
     }
 
+    public ResponseEntity<CommonResponseDto> deleteReview(Long movieId, Long id) {
+        // 리뷰 가져오기
+        Review review = findReview(movieId, id);
+
+        // 요청한 사용자 가져오기 -> 나중에 userdetail로 바꾸기
+        // 작성자 맞는지 확인
+        if (!review.getUser().getId().equals(1L)) { // 임시로 아이디로 확인
+            throw new CustomResponseException(HttpStatus.FORBIDDEN, "작성자만 삭제할 수 있습니다.");
+        }
+
+        reviewRepository.delete(review);
+
+        CommonResponseDto responseDto = CommonResponseDto.builder(HttpStatus.OK, "리뷰 삭제 성공").build();
+        return ResponseEntity.status(responseDto.getStatus()).body(responseDto);
+    }
+
     protected Review findReview(Long movieId, Long id) {
         return reviewRepository.findByMovieIdAndId(movieId, id).orElseThrow(() ->
                 new IllegalArgumentException("선택한 리뷰가 존재하지 않습니다.")
         );
     }
+
 }

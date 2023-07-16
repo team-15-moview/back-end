@@ -14,31 +14,24 @@ import org.springframework.web.bind.annotation.*;
 public class ReviewController {
     private final ReviewService reviewService;
 
-    /**
-     * 리뷰 작성
-     * 병합후  @AuthenticationPrincipal UserDetailsImpl userDetails 추가하기!
-     * @param movieId 영화 id
-     * @param requestDto 리뷰 요청 dto
-     * @return ResponseEntity<ReviewResponseDto> 반환
-     */
+    // 병합후  @AuthenticationPrincipal UserDetailsImpl userDetails 추가하기!
     @PostMapping
     public ResponseEntity<ReviewResponseDto> createReview(@PathVariable Long movieId,
                                                           @RequestBody ReviewRequestDto requestDto) {
         return reviewService.createReview(movieId, requestDto);
     }
 
-    /**
-     * 리뷰 수정
-     * @param movieId 영화 id
-     * @param id 리뷰 id
-     * @param requestDto 리뷰 요청 dto
-     * @return ResponseEntity<ReviewResponseDto> 반환
-     */
     @PutMapping("/{id}")
     public ResponseEntity<ReviewResponseDto> updateReview(@PathVariable Long movieId,
                                                           @PathVariable Long id,
                                                           @RequestBody ReviewRequestDto requestDto) {
         return reviewService.updateReview(movieId, id, requestDto);
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<ReviewResponseDto> getReview(@PathVariable Long movieId,
+                                                       @PathVariable Long id) {
+        return reviewService.getReview(movieId, id);
     }
 
     @DeleteMapping("/{id}")

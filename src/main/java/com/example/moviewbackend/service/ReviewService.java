@@ -70,6 +70,20 @@ public class ReviewService {
         return ResponseEntity.status(200).body(responseDto);
     }
 
+    public ResponseEntity<ReviewResponseDto> getReview(Long movieId, Long id) {
+        // 리뷰 가져오기
+        Review review = findReview(movieId, id);
+        ReviewResponseDto responseDto = ReviewResponseDto.builder()
+                .movieTitle(review.getMovie().getTitle())
+                .reviewId(review.getId())
+                .nickname(review.getUser().getNickname())
+                .content(review.getContent())
+                .star(review.getStar())
+                .build();
+
+        return ResponseEntity.status(200).body(responseDto);
+    }
+
     public ResponseEntity<CommonResponseDto> deleteReview(Long movieId, Long id) {
         // 리뷰 가져오기
         Review review = findReview(movieId, id);
@@ -91,5 +105,4 @@ public class ReviewService {
                 new IllegalArgumentException("선택한 리뷰가 존재하지 않습니다.")
         );
     }
-
 }

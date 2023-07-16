@@ -30,7 +30,7 @@ public class MovieService {
                 .toList();
     }
 
-    private Movie findMovie(Long id) {
+    protected Movie findMovie(Long id) {
         return movieRepository.findById(id).orElseThrow(() ->
                 new IllegalArgumentException("선택한 영화는 존재하지 않습니다.")
         );

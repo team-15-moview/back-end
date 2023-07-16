@@ -17,7 +17,7 @@ public class MovieResponseDto {
     private String genre;
     private String thumbnail;
     private String still;
-    private Float rate;
+    private float rate;
 
     public MovieResponseDto(Movie movie) {
         this.movieId = movie.getId();

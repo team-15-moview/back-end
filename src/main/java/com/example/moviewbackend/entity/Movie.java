@@ -3,8 +3,9 @@ package com.example.moviewbackend.entity;
 import jakarta.persistence.*;
 import lombok.Getter;
 
-import java.sql.Date;
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Getter
@@ -36,5 +37,8 @@ public class Movie {
 
     @Column(nullable = false)
     private Float rate;
+
+    @OneToMany(mappedBy = "movie", cascade = CascadeType.REMOVE)
+    private List<Review> reviews = new ArrayList<>();
 
 }

@@ -1,6 +1,7 @@
 package com.example.moviewbackend.service;
 
 import com.example.moviewbackend.dto.MovieResponseDto;
+import com.example.moviewbackend.dto.Top5MovieResponseDto;
 import com.example.moviewbackend.entity.Movie;
 import com.example.moviewbackend.repository.MovieRepository;
 import lombok.RequiredArgsConstructor;
@@ -28,6 +29,14 @@ public class MovieService {
                 .stream()
                 .map(MovieResponseDto::new)
                 .toList();
+    }
+
+    public List<Top5MovieResponseDto> getTop5Movies() {
+        return movieRepository.findTop5ByOrderByStarDesc()
+                .stream()
+                .map(Top5MovieResponseDto::new)
+                .toList();
+
     }
 
     protected Movie findMovie(Long id) {

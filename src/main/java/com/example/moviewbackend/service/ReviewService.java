@@ -25,6 +25,7 @@ public class ReviewService {
     private final MovieService movieService;
     private final UserService userService;
 
+    @Transactional
     public ResponseEntity<ReviewResponseDto> createReview(Long movieId, ReviewRequestDto requestDto) {
         // 영화 가져오기
         Movie movie = movieService.findMovie(movieId);
@@ -38,16 +39,10 @@ public class ReviewService {
         // DB에 저장
         reviewRepository.save(review);
 
-        ReviewResponseDto responseDto = ReviewResponseDto.builder()
-                .movieTitle(movie.getTitle())
-                .reviewId(review.getId())
-                .nickname(user.getNickname())
-                .content(review.getContent())
-                .star(review.getStar())
-                .likesCount(review.getLikes().size())
-                .build();
+        // 별점 업데이트
+        movie.updateStar();
 
-        return ResponseEntity.status(201).body(responseDto);
+        return ResponseEntity.status(201).body(new ReviewResponseDto(review));
     }
 
     @Transactional
@@ -64,31 +59,21 @@ public class ReviewService {
         // 엔티티 업데이트
         review.update(requestDto);
 
-        ReviewResponseDto responseDto = ReviewResponseDto.builder()
-                .movieTitle(review.getMovie().getTitle())
-                .reviewId(review.getId())
-                .nickname(review.getUser().getNickname())
-                .content(review.getContent())
-                .star(review.getStar())
-                .likesCount(review.getLikes().size())
-                .build();
+        // 영화 가져오기
+        Movie movie = movieService.findMovie(movieId);
 
-        return ResponseEntity.status(200).body(responseDto);
+        // 별점 업데이트
+        movie.updateStar();
+
+
+        return ResponseEntity.status(200).body(new ReviewResponseDto(review));
     }
 
     public ResponseEntity<ReviewResponseDto> getReview(Long movieId, Long id) {
         // 리뷰 가져오기
         Review review = findReview(movieId, id);
-        ReviewResponseDto responseDto = ReviewResponseDto.builder()
-                .movieTitle(review.getMovie().getTitle())
-                .reviewId(review.getId())
-                .nickname(review.getUser().getNickname())
-                .content(review.getContent())
-                .star(review.getStar())
-                .likesCount(review.getLikes().size())
-                .build();
 
-        return ResponseEntity.status(200).body(responseDto);
+        return ResponseEntity.status(200).body(new ReviewResponseDto(review));
     }
 
     public ResponseEntity<CommonResponseDto> deleteReview(Long movieId, Long id) {
@@ -103,13 +88,18 @@ public class ReviewService {
 
         reviewRepository.delete(review);
 
+        // 영화 가져오기
+        Movie movie = movieService.findMovie(movieId);
+        // 별점 업데이트
+        movie.updateStar();
+
         CommonResponseDto responseDto = CommonResponseDto.builder(HttpStatus.OK, "리뷰 삭제 성공").build();
         return ResponseEntity.status(responseDto.getStatus()).body(responseDto);
     }
 
     public ResponseEntity<ReviewResponseDto> like(Long movieId, Long id) {
         // 사용자 가져오기 -> 나중에 userdetail로 바꾸기
-        User user = userService.findUser(1L);
+        User user = userService.findUser(2L);
         // 리뷰 가져오기
         Review review = findReview(movieId, id);
 
@@ -124,16 +114,7 @@ public class ReviewService {
 
         likeRepository.save(like);
 
-        ReviewResponseDto responseDto = ReviewResponseDto.builder()
-                .movieTitle(review.getMovie().getTitle())
-                .reviewId(review.getId())
-                .nickname(review.getUser().getNickname())
-                .content(review.getContent())
-                .star(review.getStar())
-                .likesCount(review.getLikes().size())
-                .build();
-
-        return ResponseEntity.ok(responseDto);
+        return ResponseEntity.ok(new ReviewResponseDto(review));
     }
 
     public ResponseEntity<ReviewResponseDto> dislike(Long movieId, Long id) {
@@ -148,16 +129,7 @@ public class ReviewService {
 
         likeRepository.delete(like);
 
-        ReviewResponseDto responseDto = ReviewResponseDto.builder()
-                .movieTitle(review.getMovie().getTitle())
-                .reviewId(review.getId())
-                .nickname(review.getUser().getNickname())
-                .content(review.getContent())
-                .star(review.getStar())
-                .likesCount(review.getLikes().size())
-                .build();
-
-        return ResponseEntity.ok(responseDto);
+        return ResponseEntity.ok(new ReviewResponseDto(review));
     }
 
     protected Review findReview(Long movieId, Long id) {

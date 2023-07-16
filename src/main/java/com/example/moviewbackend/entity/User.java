@@ -27,4 +27,9 @@ public class User {
     @Column(nullable = false)
     @Enumerated(value = EnumType.STRING) // Enum 타입 저장할때 사용
     private UserRoleEnum role;
+
+    public User (String email, String password) {
+        this.email = email;
+        this.password = password;
+    }
 }

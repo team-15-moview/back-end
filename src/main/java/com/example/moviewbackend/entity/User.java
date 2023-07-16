@@ -2,10 +2,12 @@ package com.example.moviewbackend.entity;
 
 import jakarta.persistence.*;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @Entity
 @Getter
 @Table(name = "users")
+@NoArgsConstructor
 public class User {
     @Id
     @Column(name = "user_id")
@@ -32,4 +34,6 @@ public class User {
         this.email = email;
         this.password = password;
     }
+
+
 }

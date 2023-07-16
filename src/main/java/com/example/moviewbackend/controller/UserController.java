@@ -8,7 +8,6 @@ import com.example.moviewbackend.jwt.JwtUtil;
 import com.example.moviewbackend.service.KakaoService;
 import com.example.moviewbackend.service.UserService;
 import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -39,11 +38,18 @@ public class UserController {
 
     //로그인
     @PostMapping("/login")
-    public ResponseEntity<ApiResponseDto> login(@RequestBody LoginRequestDto loginRequestDto, HttpServletResponse response) {
+    public ResponseEntity<ApiResponseDto> login(@RequestBody LoginRequestDto loginRequestDto) {
         userService.login(loginRequestDto);
 
         return ResponseEntity.ok().body(new ApiResponseDto("로그인 성공"));
     }
+
+    @PostMapping("/logout")
+    public ResponseEntity<ApiResponseDto> logout() {
+        return ResponseEntity.ok().body(new ApiResponseDto("로그아웃 성공"));
+    }
+
+
 
 
 //    @GetMapping("/user/kakao/callback")

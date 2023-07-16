@@ -23,7 +23,7 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
 
     private final JwtUtil jwtUtil;
     private final UserDetailsServiceImpl userDetailsService;
-    private final ObjectMapper objectMapper;
+    private final ObjectMapper objectMapper; //ObjectMapper 클래스는 Jackson 라이브러리에 포함된 클래스로서, 자바 객체를 JSON으로 변환하거나 JSON을 자바 객체로 변환하는 등의 작업을 할 때 사용
 
     public JwtAuthorizationFilter(JwtUtil jwtUtil, UserDetailsServiceImpl userDetailsService, ObjectMapper objectMapper) {
         this.jwtUtil = jwtUtil;
@@ -36,6 +36,7 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
         String token = jwtUtil.resolveToken(request);
 
         if(token != null) {
+
             if(!jwtUtil.validateToken(token)){
                 ApiResponseDto responseDto = new ApiResponseDto("토큰이 유효하지 않습니다.");
                 response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
@@ -43,6 +44,7 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
                 response.getWriter().write(objectMapper.writeValueAsString(responseDto));
                 return;
             }
+
             Claims info = jwtUtil.getUserInfoFromToken(token);
             setAuthentication(info.getSubject());
         }

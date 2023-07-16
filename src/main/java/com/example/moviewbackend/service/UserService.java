@@ -50,6 +50,10 @@ public class UserService {
             throw new IllegalStateException("You can't delete another user's account!");
         }
         userRepository.delete(user);
+
+        //댓글, 리뷰, 좋아요 삭제 필요
+
+
     }
 
     public void login(LoginRequestDto requestDto) {
@@ -66,8 +70,6 @@ public class UserService {
             throw new IllegalArgumentException("비밀번호가 일치하지 않습니다.");
         }
 
-        //response.addHeader(JwtUtil.AUTHORIZATION_HEADER, jwtUtil.createToken(loginRequestDto.getNickname(), loginRequestDto.getRole()));
-    }
-
-
+        jwtUtil.createToken(email);
+    };
 }

@@ -57,7 +57,8 @@ public class WebSecurityConfig {
         http.authorizeHttpRequests((authorizeHttpRequests) ->
                 authorizeHttpRequests
                         .requestMatchers(PathRequest.toStaticResources().atCommonLocations()).permitAll() // resources 접근 허용 설정
-                        .requestMatchers("/api/users/**").permitAll() // '/api/auth/'로 시작하는 요청 모두 접근 허가
+                        .requestMatchers("/api/users/signup").permitAll() // '/api/auth/'로 시작하는 요청 모두 접근 허가
+                        .requestMatchers("/api/users/login").permitAll()
                         .requestMatchers(HttpMethod.GET, "/api/movies/**").permitAll()
                         .requestMatchers(HttpMethod.GET, "/api/reviews/**").permitAll() //추가 기능사항
 

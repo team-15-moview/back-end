@@ -39,9 +39,10 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
             log.info(tokenValue);
 
             if (!jwtUtil.validateToken(tokenValue)) {
-                log.error("Token Error");
+                log.error("검증되지 않은 토큰입니다.");
                 return;
             }
+            log.error("검증된 토큰입니다.");
 
             Claims info = jwtUtil.getUserInfoFromToken(tokenValue);
 
@@ -57,17 +58,17 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
     }
 
     // 인증 처리 : doFilterInternal 메서에서 가져온 토큰이 유효하다면 토큰에 담긴 사용자 정보를 꺼내와서 Authentication 객체를 생성하고, 이를 SecurityContextHolder에 저장
-    public void setAuthentication(String username) {
+    public void setAuthentication(String email) {
         SecurityContext context = SecurityContextHolder.createEmptyContext();
-        Authentication authentication = createAuthentication(username);
+        Authentication authentication = createAuthentication(email);
         context.setAuthentication(authentication);
 
         SecurityContextHolder.setContext(context);
     }
 
     // 인증 객체 생성
-    private Authentication createAuthentication(String username) {
-        UserDetails userDetails = userDetailsService.loadUserByUsername(username);
+    private Authentication createAuthentication(String email) {
+        UserDetails userDetails = userDetailsService.loadUserByUsername(email);
         return new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
     }
 }

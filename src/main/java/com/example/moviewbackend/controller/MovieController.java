@@ -34,7 +34,7 @@ public class MovieController {
 
     /**
      * 장르별 영화 조회
-     * @param genre
+     * @param genre 영화 장르
      * @return MovieResponseDto 리스트 반환
      */
     @GetMapping("/query")

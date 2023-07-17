@@ -1,6 +1,7 @@
 package com.example.moviewbackend.service;
 
 import com.example.moviewbackend.dto.CommonResponseDto;
+import com.example.moviewbackend.dto.NewReviewRequestDto;
 import com.example.moviewbackend.dto.ReviewRequestDto;
 import com.example.moviewbackend.dto.ReviewResponseDto;
 import com.example.moviewbackend.entity.Like;
@@ -11,25 +12,24 @@ import com.example.moviewbackend.exception.CustomResponseException;
 import com.example.moviewbackend.repository.LikeRepository;
 import com.example.moviewbackend.repository.ReviewRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+@Slf4j(topic = "리뷰 서비스")
 @Service
 @RequiredArgsConstructor
 public class ReviewService {
     private final ReviewRepository reviewRepository;
     private final LikeRepository likeRepository;
     private final MovieService movieService;
-    private final UserService userService;
 
-    public ResponseEntity<ReviewResponseDto> createReview(Long movieId, ReviewRequestDto requestDto) {
+    public ResponseEntity<ReviewResponseDto> createReview(User user, NewReviewRequestDto requestDto) {
+        log.info("리뷰 작성");
         // 영화 가져오기
-        Movie movie = movieService.findMovie(movieId);
-
-        // 사용자 가져오기 -> 나중에 userdetail로 바꾸기
-        User user = userService.findUser(requestDto.getUser_id());
+        Movie movie = movieService.findMovie(requestDto.getMovieId());
 
         // 리뷰 생성
         Review review = new Review(requestDto, user, movie);
@@ -50,13 +50,12 @@ public class ReviewService {
     }
 
     @Transactional
-    public ResponseEntity<ReviewResponseDto> updateReview(Long movieId, Long id, ReviewRequestDto requestDto) {
+    public ResponseEntity<ReviewResponseDto> updateReview(User user, Long id, ReviewRequestDto requestDto) {
         // 리뷰 가져오기
-        Review review = findReview(movieId, id);
+        Review review = findReview(id);
 
-        // 요청한 사용자 가져오기 -> 나중에 userdetail로 바꾸기
         // 작성자 맞는지 확인
-        if (!review.getUser().getId().equals(requestDto.getUser_id())) { // 임시로 아이디로 확인
+        if (!review.getUser().getId().equals(user.getId())) {
             throw new CustomResponseException(HttpStatus.FORBIDDEN, "작성자만 수정할 수 있습니다.");
         }
 
@@ -75,9 +74,10 @@ public class ReviewService {
         return ResponseEntity.status(200).body(responseDto);
     }
 
-    public ResponseEntity<ReviewResponseDto> getReview(Long movieId, Long id) {
+    public ResponseEntity<ReviewResponseDto> getReview(Long id) {
         // 리뷰 가져오기
-        Review review = findReview(movieId, id);
+        Review review = findReview(id);
+
         ReviewResponseDto responseDto = ReviewResponseDto.builder()
                 .movieTitle(review.getMovie().getTitle())
                 .reviewId(review.getId())
@@ -90,13 +90,12 @@ public class ReviewService {
         return ResponseEntity.status(200).body(responseDto);
     }
 
-    public ResponseEntity<CommonResponseDto> deleteReview(Long movieId, Long id) {
+    public ResponseEntity<CommonResponseDto> deleteReview(User user, Long id) {
         // 리뷰 가져오기
-        Review review = findReview(movieId, id);
+        Review review = findReview(id);
 
-        // 요청한 사용자 가져오기 -> 나중에 userdetail로 바꾸기
         // 작성자 맞는지 확인
-        if (!review.getUser().getId().equals(1L)) { // 임시로 아이디로 확인
+        if (!review.getUser().getId().equals(user.getId())) {
             throw new CustomResponseException(HttpStatus.FORBIDDEN, "작성자만 삭제할 수 있습니다.");
         }
 
@@ -106,12 +105,11 @@ public class ReviewService {
         return ResponseEntity.status(responseDto.getStatus()).body(responseDto);
     }
 
-    public ResponseEntity<ReviewResponseDto> like(Long movieId, Long id) {
-        // 사용자 가져오기 -> 나중에 userdetail로 바꾸기
-        User user = userService.findUser(1L);
+    public ResponseEntity<ReviewResponseDto> like(User user, Long id) {
         // 리뷰 가져오기
-        Review review = findReview(movieId, id);
+        Review review = findReview(id);
 
+        // 사용자가 해당 리뷰에 좋아요를 이미 눌렀는지 확인
         if (likeRepository.findByUserAndReview(user, review).isPresent()) {
             throw new IllegalArgumentException("이미 좋아요를 눌렀습니다.");
         }
@@ -135,11 +133,9 @@ public class ReviewService {
         return ResponseEntity.ok(responseDto);
     }
 
-    public ResponseEntity<ReviewResponseDto> dislike(Long movieId, Long id) {
-        // 사용자 가져오기 -> 나중에 userdetail로 바꾸기
-        User user = userService.findUser(1L);
+    public ResponseEntity<ReviewResponseDto> dislike(User user, Long id) {
         // 리뷰 가져오기
-        Review review = findReview(movieId, id);
+        Review review = findReview(id);
         // 좋아요 가져오기
         Like like = likeRepository.findByUserAndReview(user, review).orElseThrow(() ->
                 new IllegalArgumentException("선택한 좋아요는 존재하지 않습니다.")
@@ -159,8 +155,8 @@ public class ReviewService {
         return ResponseEntity.ok(responseDto);
     }
 
-    protected Review findReview(Long movieId, Long id) {
-        return reviewRepository.findByMovieIdAndId(movieId, id).orElseThrow(() ->
+    protected Review findReview(Long id) {
+        return reviewRepository.findById(id).orElseThrow(() ->
                 new IllegalArgumentException("선택한 리뷰가 존재하지 않습니다.")
         );
     }

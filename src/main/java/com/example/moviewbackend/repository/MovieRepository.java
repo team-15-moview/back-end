@@ -9,4 +9,6 @@ public interface MovieRepository extends JpaRepository<Movie, Long> {
     List<Movie> findAllByOrderByOpenDateDesc();
 
     List<Movie> findAllByGenre(String genre);
+
+    List<Movie> findTop5ByOrderByStarDesc();
 }

@@ -2,6 +2,7 @@ package com.example.moviewbackend.entity;
 
 import jakarta.persistence.*;
 import lombok.Getter;
+import org.hibernate.annotations.ColumnDefault;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -38,7 +39,16 @@ public class Movie {
     @Column(nullable = false)
     private Float rate;
 
+    @Column(nullable = false)
+    @ColumnDefault("0.0")
+    private Float star;
+
     @OneToMany(mappedBy = "movie", cascade = CascadeType.REMOVE)
     private List<Review> reviews = new ArrayList<>();
 
+    public void updateStar() {
+        this.star = (float) reviews.stream()
+                .mapToDouble(Review::getStar)
+                .sum()/ reviews.size();
+    }
 }

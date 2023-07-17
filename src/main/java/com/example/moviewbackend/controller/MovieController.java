@@ -1,6 +1,7 @@
 package com.example.moviewbackend.controller;
 
 import com.example.moviewbackend.dto.MovieResponseDto;
+import com.example.moviewbackend.dto.Top5MovieResponseDto;
 import com.example.moviewbackend.service.MovieService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
@@ -40,5 +41,10 @@ public class MovieController {
     @GetMapping("/query")
     public List<MovieResponseDto> getMoviesByGenre(@RequestParam String genre) {
         return movieService.getMoviesByGenre(genre);
+    }
+
+    @GetMapping("/top5")
+    public List<Top5MovieResponseDto> getTop5Movies() {
+        return movieService.getTop5Movies();
     }
 }

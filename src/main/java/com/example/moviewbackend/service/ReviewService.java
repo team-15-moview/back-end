@@ -18,7 +18,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-@Slf4j(topic = "리뷰 서비스")
 @Service
 @RequiredArgsConstructor
 public class ReviewService {
@@ -26,8 +25,8 @@ public class ReviewService {
     private final LikeRepository likeRepository;
     private final MovieService movieService;
 
+    @Transactional
     public ResponseEntity<ReviewResponseDto> createReview(User user, NewReviewRequestDto requestDto) {
-        log.info("리뷰 작성");
         // 영화 가져오기
         Movie movie = movieService.findMovie(requestDto.getMovieId());
 
@@ -37,16 +36,10 @@ public class ReviewService {
         // DB에 저장
         reviewRepository.save(review);
 
-        ReviewResponseDto responseDto = ReviewResponseDto.builder()
-                .movieTitle(movie.getTitle())
-                .reviewId(review.getId())
-                .nickname(user.getNickname())
-                .content(review.getContent())
-                .star(review.getStar())
-                .likesCount(review.getLikes().size())
-                .build();
+        // 별점 업데이트
+        movie.updateStar();
 
-        return ResponseEntity.status(201).body(responseDto);
+        return ResponseEntity.status(201).body(new ReviewResponseDto(review));
     }
 
     @Transactional
@@ -62,34 +55,20 @@ public class ReviewService {
         // 엔티티 업데이트
         review.update(requestDto);
 
-        ReviewResponseDto responseDto = ReviewResponseDto.builder()
-                .movieTitle(review.getMovie().getTitle())
-                .reviewId(review.getId())
-                .nickname(review.getUser().getNickname())
-                .content(review.getContent())
-                .star(review.getStar())
-                .likesCount(review.getLikes().size())
-                .build();
+        // 별점 업데이트
+        review.getMovie().updateStar();
 
-        return ResponseEntity.status(200).body(responseDto);
+        return ResponseEntity.status(200).body(new ReviewResponseDto(review));
     }
 
     public ResponseEntity<ReviewResponseDto> getReview(Long id) {
         // 리뷰 가져오기
         Review review = findReview(id);
 
-        ReviewResponseDto responseDto = ReviewResponseDto.builder()
-                .movieTitle(review.getMovie().getTitle())
-                .reviewId(review.getId())
-                .nickname(review.getUser().getNickname())
-                .content(review.getContent())
-                .star(review.getStar())
-                .likesCount(review.getLikes().size())
-                .build();
-
-        return ResponseEntity.status(200).body(responseDto);
+        return ResponseEntity.status(200).body(new ReviewResponseDto(review));
     }
 
+    @Transactional
     public ResponseEntity<CommonResponseDto> deleteReview(User user, Long id) {
         // 리뷰 가져오기
         Review review = findReview(id);
@@ -100,6 +79,9 @@ public class ReviewService {
         }
 
         reviewRepository.delete(review);
+
+        // 별점 업데이트
+        review.getMovie().updateStar();
 
         CommonResponseDto responseDto = CommonResponseDto.builder(HttpStatus.OK, "리뷰 삭제 성공").build();
         return ResponseEntity.status(responseDto.getStatus()).body(responseDto);
@@ -121,16 +103,7 @@ public class ReviewService {
 
         likeRepository.save(like);
 
-        ReviewResponseDto responseDto = ReviewResponseDto.builder()
-                .movieTitle(review.getMovie().getTitle())
-                .reviewId(review.getId())
-                .nickname(review.getUser().getNickname())
-                .content(review.getContent())
-                .star(review.getStar())
-                .likesCount(review.getLikes().size())
-                .build();
-
-        return ResponseEntity.ok(responseDto);
+        return ResponseEntity.ok(new ReviewResponseDto(review));
     }
 
     public ResponseEntity<ReviewResponseDto> dislike(User user, Long id) {
@@ -143,16 +116,7 @@ public class ReviewService {
 
         likeRepository.delete(like);
 
-        ReviewResponseDto responseDto = ReviewResponseDto.builder()
-                .movieTitle(review.getMovie().getTitle())
-                .reviewId(review.getId())
-                .nickname(review.getUser().getNickname())
-                .content(review.getContent())
-                .star(review.getStar())
-                .likesCount(review.getLikes().size())
-                .build();
-
-        return ResponseEntity.ok(responseDto);
+        return ResponseEntity.ok(new ReviewResponseDto(review));
     }
 
     protected Review findReview(Long id) {

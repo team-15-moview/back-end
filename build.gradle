@@ -22,6 +22,9 @@ repositories {
 }
 
 dependencies {
+    //카카오서버에 인가토큰(access token)을 POST로 요청하고, 결과를 JSON형식으로 받기 때문에 JSON파싱에 유용한 Gson라이브러리
+    dependencies { implementation 'com.google.code.gson:gson:2.8.7' }
+
     annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor'
     // JWT
     compileOnly group: 'io.jsonwebtoken', name: 'jjwt-api', version: '0.11.5'

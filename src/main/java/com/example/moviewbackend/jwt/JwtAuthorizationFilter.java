@@ -23,33 +23,38 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
 
     private final JwtUtil jwtUtil;
     private final UserDetailsServiceImpl userDetailsService;
-    private final ObjectMapper objectMapper; //ObjectMapper 클래스는 Jackson 라이브러리에 포함된 클래스로서, 자바 객체를 JSON으로 변환하거나 JSON을 자바 객체로 변환하는 등의 작업을 할 때 사용
 
-    public JwtAuthorizationFilter(JwtUtil jwtUtil, UserDetailsServiceImpl userDetailsService, ObjectMapper objectMapper) {
+    public JwtAuthorizationFilter(JwtUtil jwtUtil, UserDetailsServiceImpl userDetailsService) {
         this.jwtUtil = jwtUtil;
         this.userDetailsService = userDetailsService;
-        this.objectMapper = objectMapper;
     }
 
     @Override
-    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
-        String token = jwtUtil.resolveToken(request);
+    protected void doFilterInternal(HttpServletRequest req, HttpServletResponse res, FilterChain filterChain) throws ServletException, IOException {
 
-        if(token != null) {
+        String tokenValue = jwtUtil.getTokenFromRequest(req);
 
-            if(!jwtUtil.validateToken(token)){
-                ApiResponseDto responseDto = new ApiResponseDto("토큰이 유효하지 않습니다.");
-                response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-                response.setContentType("application/json; charset=UTF-8");
-                response.getWriter().write(objectMapper.writeValueAsString(responseDto));
+        if (StringUtils.hasText(tokenValue)) {
+            // JWT 토큰 substring
+            tokenValue = jwtUtil.substringToken(tokenValue);
+            log.info(tokenValue);
+
+            if (!jwtUtil.validateToken(tokenValue)) {
+                log.error("Token Error");
                 return;
             }
 
-            Claims info = jwtUtil.getUserInfoFromToken(token);
-            setAuthentication(info.getSubject());
+            Claims info = jwtUtil.getUserInfoFromToken(tokenValue);
+
+            try {
+                setAuthentication(info.getSubject());
+            } catch (Exception e) {
+                log.error(e.getMessage());
+                return;
+            }
         }
 
-        filterChain.doFilter(request, response);
+        filterChain.doFilter(req, res);
     }
 
     // 인증 처리
@@ -57,9 +62,7 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
         SecurityContext context = SecurityContextHolder.createEmptyContext();
         Authentication authentication = createAuthentication(username);
         context.setAuthentication(authentication);
-        // username -> user 조회 -> userDetails 에 담고 -> authentication의 principal 에 담고
-        // -> securityContent 에 담고 -> SecurityContextHolder 에 담고
-        // -> 이제 @AuthenticationPrincipal 로 조회할 수 있음
+
         SecurityContextHolder.setContext(context);
     }
 

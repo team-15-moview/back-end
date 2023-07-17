@@ -2,13 +2,11 @@ package com.example.moviewbackend.controller;
 
 
 import com.example.moviewbackend.dto.ApiResponseDto;
-import com.example.moviewbackend.dto.LoginRequestDto;
 import com.example.moviewbackend.dto.SignupRequestDto;
 import com.example.moviewbackend.jwt.JwtUtil;
 import com.example.moviewbackend.service.KakaoService;
 import com.example.moviewbackend.service.UserService;
 import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -37,23 +35,10 @@ public class UserController {
         return ResponseEntity.ok().body(new ApiResponseDto("회원탈퇴 성공"));
     }
 
-    //로그인
-    @PostMapping("/login")
-    public ResponseEntity<ApiResponseDto> login(@RequestBody LoginRequestDto loginRequestDto, HttpServletResponse response) {
-        userService.login(loginRequestDto);
-
-        return ResponseEntity.ok().body(new ApiResponseDto("로그인 성공"));
+    @PostMapping("/logout")
+    public ResponseEntity<ApiResponseDto> logout() {
+        return ResponseEntity.ok().body(new ApiResponseDto("로그아웃 성공"));
     }
 
 
-//    @GetMapping("/user/kakao/callback")
-//    public String KakaoLogin(@RequestParam String code, HttpServletResponse response) {
-//        String token = kakaoService.kakaoLogin(code);
-//
-//        Cookie cookie = new Cookie(JwtUtil.AUTHORIZATION_HEADER, token);
-//        cookie.setPath("/");
-//        response.addCookie(cookie);
-//
-//        return "redirect:/";
-//    }
 }

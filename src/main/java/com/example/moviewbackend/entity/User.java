@@ -30,9 +30,11 @@ public class User {
     @Enumerated(value = EnumType.STRING) // Enum 타입 저장할때 사용
     private UserRoleEnum role;
 
-    public User (String email, String password) {
+    public User (String email, String password, String nickname, UserRoleEnum role) {
         this.email = email;
         this.password = password;
+        this.nickname = nickname;
+        this.role = role;
     }
 
 

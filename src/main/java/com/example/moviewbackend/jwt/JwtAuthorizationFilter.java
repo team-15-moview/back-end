@@ -56,7 +56,7 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
         filterChain.doFilter(req, res);
     }
 
-    // 인증 처리
+    // 인증 처리 : doFilterInternal 메서에서 가져온 토큰이 유효하다면 토큰에 담긴 사용자 정보를 꺼내와서 Authentication 객체를 생성하고, 이를 SecurityContextHolder에 저장
     public void setAuthentication(String username) {
         SecurityContext context = SecurityContextHolder.createEmptyContext();
         Authentication authentication = createAuthentication(username);

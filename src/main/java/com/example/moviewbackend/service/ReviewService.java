@@ -12,7 +12,6 @@ import com.example.moviewbackend.exception.CustomResponseException;
 import com.example.moviewbackend.repository.LikeRepository;
 import com.example.moviewbackend.repository.ReviewRepository;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -87,6 +86,7 @@ public class ReviewService {
         return ResponseEntity.status(responseDto.getStatus()).body(responseDto);
     }
 
+    @Transactional
     public ResponseEntity<ReviewResponseDto> like(User user, Long id) {
         // 리뷰 가져오기
         Review review = findReview(id);
@@ -102,10 +102,12 @@ public class ReviewService {
                 .build();
 
         likeRepository.save(like);
+        review.updateLike(true);
 
         return ResponseEntity.ok(new ReviewResponseDto(review));
     }
 
+    @Transactional
     public ResponseEntity<ReviewResponseDto> dislike(User user, Long id) {
         // 리뷰 가져오기
         Review review = findReview(id);
@@ -115,6 +117,7 @@ public class ReviewService {
         );
 
         likeRepository.delete(like);
+        review.updateLike(false);
 
         return ResponseEntity.ok(new ReviewResponseDto(review));
     }

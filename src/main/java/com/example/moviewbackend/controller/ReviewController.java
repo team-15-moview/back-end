@@ -8,6 +8,7 @@ import com.example.moviewbackend.security.UserDetailsImpl;
 import com.example.moviewbackend.service.ReviewService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
@@ -52,5 +53,12 @@ public class ReviewController {
     public ResponseEntity<ReviewResponseDto> dislike(@AuthenticationPrincipal UserDetailsImpl userDetails,
                                                      @PathVariable Long id) {
         return reviewService.dislike(userDetails.getUser(), id);
+    }
+
+    @GetMapping
+    public Page<ReviewResponseDto> getReviews(@RequestParam Long movieId,
+                                              @RequestParam Long lastReviewId,
+                                              @RequestParam int size) {
+        return reviewService.getReviews(movieId, lastReviewId, size);
     }
 }

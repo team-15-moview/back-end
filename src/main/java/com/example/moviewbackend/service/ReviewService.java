@@ -12,6 +12,9 @@ import com.example.moviewbackend.exception.CustomResponseException;
 import com.example.moviewbackend.repository.LikeRepository;
 import com.example.moviewbackend.repository.ReviewRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -120,6 +123,13 @@ public class ReviewService {
         review.updateLike(false);
 
         return ResponseEntity.ok(new ReviewResponseDto(review));
+    }
+
+    public Page<ReviewResponseDto> getReviews(Long movieId, Long lastReviewId, int size) {
+        Pageable pageable = PageRequest.of(0, size); // no-offset 방식: page를 0으로 고정
+        // Long.MAX_VALUE=9223372036854775807
+        Page<Review> reviewPage = reviewRepository.findByMovieIdAndIdLessThanOrderByIdDesc(movieId, lastReviewId, pageable);
+        return reviewPage.map(ReviewResponseDto::new);
     }
 
     protected Review findReview(Long id) {

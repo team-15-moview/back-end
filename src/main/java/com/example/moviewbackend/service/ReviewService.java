@@ -1,17 +1,16 @@
 package com.example.moviewbackend.service;
 
 import com.example.moviewbackend.dto.CommonResponseDto;
-import com.example.moviewbackend.entity.Like;
-import com.example.moviewbackend.exception.CustomResponseException;
 import com.example.moviewbackend.dto.ReviewRequestDto;
 import com.example.moviewbackend.dto.ReviewResponseDto;
+import com.example.moviewbackend.entity.Like;
 import com.example.moviewbackend.entity.Movie;
 import com.example.moviewbackend.entity.Review;
 import com.example.moviewbackend.entity.User;
+import com.example.moviewbackend.exception.CustomResponseException;
 import com.example.moviewbackend.repository.LikeRepository;
 import com.example.moviewbackend.repository.ReviewRepository;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;

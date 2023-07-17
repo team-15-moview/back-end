@@ -27,11 +27,11 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 
     @Override
     public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) throws AuthenticationException {
-
+        log.info("로그인 시도");
         try {
             LoginRequestDto requestDto = new ObjectMapper().readValue(request.getInputStream(), LoginRequestDto.class);
 
-            return getAuthenticationManager().authenticate(
+            return getAuthenticationManager().authenticate( // authenticate method
                     new UsernamePasswordAuthenticationToken(
                             requestDto.getEmail(),
                             requestDto.getPassword(),
@@ -39,7 +39,7 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
                     )
             );
         } catch (IOException e) {
-
+            log.error(e.getMessage());
             throw new RuntimeException(e.getMessage());
         }
     }

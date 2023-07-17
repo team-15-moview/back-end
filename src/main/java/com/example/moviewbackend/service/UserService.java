@@ -37,17 +37,7 @@ public class UserService {
         userRepository.save(user);
     }
 
-    public void withdrawal(Long id, HttpServletRequest request) {
-        String token = jwtUtil.getTokenFromRequest(request);
-        Claims claims = jwtUtil.getUserInfoFromToken(token);
-        String email = claims.getSubject();
-        User user = userRepository.findByEmail(email).orElseThrow(
-                () -> new IllegalArgumentException("등록된 사용자가 아닙니다.")
-        );
-
-        if(!user.getId().equals(id)) {
-            throw new IllegalStateException("You can't delete another user's account!");
-        }
+    public void withdrawal(User user) {
         userRepository.delete(user);
 
         //댓글, 리뷰, 좋아요 삭제 필요
@@ -61,4 +51,3 @@ public class UserService {
         );
     }
 }
-

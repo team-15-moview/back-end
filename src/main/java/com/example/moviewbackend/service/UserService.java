@@ -1,6 +1,6 @@
 package com.example.moviewbackend.service;
 
-import com.example.moviewbackend.dto.LoginRequestDto;
+
 import com.example.moviewbackend.dto.SignupRequestDto;
 import com.example.moviewbackend.entity.User;
 import com.example.moviewbackend.entity.UserRoleEnum;
@@ -44,5 +44,11 @@ public class UserService {
         //댓글, 리뷰, 좋아요 삭제 필요
 
 
+    }
+
+    protected User findUser(Long id) {
+        return userRepository.findById(id).orElseThrow(() ->
+                new IllegalArgumentException("해당하는 사용자가 존재하지 않습니다.")
+        );
     }
 }

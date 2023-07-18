@@ -37,6 +37,7 @@ public class User {
     @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE)
     private List<Like> likes = new ArrayList<>();
 
+    @Column(nullable = true, unique = true)
     private Long kakaoId;
 
     public User(String nickname, String password, String email, UserRoleEnum role, Long kakaoId) {
@@ -54,8 +55,8 @@ public class User {
         this.role = role;
     }
 
-    public User kakaoIdUpdate(Long kakaoId) {
-        return this;
+    public void kakaoIdUpdate(Long kakaoId) {
+        this.kakaoId = kakaoId;
     }
 }
 

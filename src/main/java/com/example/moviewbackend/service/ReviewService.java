@@ -70,7 +70,6 @@ public class ReviewService {
         return ResponseEntity.status(200).body(new ReviewResponseDto(review));
     }
 
-    @Transactional
     public ResponseEntity<CommonResponseDto> deleteReview(User user, Long id) {
         // 리뷰 가져오기
         Review review = findReview(id);
@@ -83,7 +82,8 @@ public class ReviewService {
         reviewRepository.delete(review);
 
         // 별점 업데이트
-        review.getMovie().updateStar();
+        Movie movie = review.getMovie();
+        movie.updateStar();
 
         CommonResponseDto responseDto = CommonResponseDto.builder(HttpStatus.OK, "리뷰 삭제 성공").build();
         return ResponseEntity.status(responseDto.getStatus()).body(responseDto);

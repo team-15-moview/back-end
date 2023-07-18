@@ -1,9 +1,6 @@
 package com.example.moviewbackend.service;
 
-import com.example.moviewbackend.dto.CommonResponseDto;
-import com.example.moviewbackend.dto.NewReviewRequestDto;
-import com.example.moviewbackend.dto.ReviewRequestDto;
-import com.example.moviewbackend.dto.ReviewResponseDto;
+import com.example.moviewbackend.dto.*;
 import com.example.moviewbackend.entity.Like;
 import com.example.moviewbackend.entity.Movie;
 import com.example.moviewbackend.entity.Review;
@@ -11,6 +8,7 @@ import com.example.moviewbackend.entity.User;
 import com.example.moviewbackend.exception.CustomResponseException;
 import com.example.moviewbackend.repository.LikeRepository;
 import com.example.moviewbackend.repository.ReviewRepository;
+import com.example.moviewbackend.security.UserDetailsImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -19,6 +17,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -57,21 +57,30 @@ public class ReviewService {
         // 엔티티 업데이트
         review.update(requestDto);
 
+        // 별점 업데이트
         review.getMovie().updateStar();
 
-      return ResponseEntity.status(200).body(new ReviewResponseDto(review));
-    }
-
-    public ResponseEntity<ReviewResponseDto> getReview(Long id) {
-        // 리뷰 가져오기
-        Review review = findReview(id);
-      
         return ResponseEntity.status(200).body(new ReviewResponseDto(review));
     }
 
+    public ResponseEntity<DetailReviewResponseDto> getReview(Optional<UserDetailsImpl> userDetails, Long id) {
+        // 리뷰 가져오기
+        Review review = findReview(id);
+
+        boolean likeByUser = false;
+        if (userDetails.isPresent()) { // 만약 사용자가 로그인한 상태면
+            // 현재 접속한 사용자가 해당 리뷰에 좋아요를 누른 상태인지 확인
+            likeByUser = likeRepository.existsByUserAndReview(userDetails.get().getUser(), review);
+        }
+
+        return ResponseEntity.status(200).body(new DetailReviewResponseDto(review, likeByUser));
+    }
+
+    @Transactional
     public ResponseEntity<CommonResponseDto> deleteReview(User user, Long id) {
         // 리뷰 가져오기
         Review review = findReview(id);
+        Movie movie = review.getMovie();
 
         // 작성자 맞는지 확인
         if (!review.getUser().getId().equals(user.getId())) {
@@ -80,7 +89,6 @@ public class ReviewService {
 
         reviewRepository.delete(review);
 
-        Movie movie = review.getMovie();
         // 별점 업데이트
         movie.updateStar();
 

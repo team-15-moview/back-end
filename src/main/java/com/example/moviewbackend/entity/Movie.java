@@ -51,4 +51,8 @@ public class Movie {
                 .mapToDouble(Review::getStar)
                 .sum()/ reviews.size();
     }
+
+    public void deleteReview(Review review){
+        this.reviews.remove(review);
+    }
 }

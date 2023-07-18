@@ -1,7 +1,6 @@
 package com.example.moviewbackend.dto;
 
 import com.example.moviewbackend.entity.UserRoleEnum;
-import jakarta.validation.constraints.Email;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -9,7 +8,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class LoginRequestDto {
 
-    @Email
+
     private String email;
 
     private String password;

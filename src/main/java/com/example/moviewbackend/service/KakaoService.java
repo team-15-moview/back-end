@@ -128,7 +128,7 @@ public class KakaoService {
     }
 
 
-    private User registerKakaoUserIfNeeded(KakaoUserInfoDto kakaoUserInfo) {
+    private void registerKakaoUserIfNeeded(KakaoUserInfoDto kakaoUserInfo) {
         // DB 에 중복된 Kakao Id 가 있는지 확인
         Long kakaoId = kakaoUserInfo.getId();
         User kakaoUser = userRepository.findByKakaoId(kakaoId).orElse(null);
@@ -155,10 +155,6 @@ public class KakaoService {
 
             userRepository.save(kakaoUser);
         }
-        return kakaoUser;
     }
-
-
-
 }
 

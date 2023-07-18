@@ -43,4 +43,12 @@ public class UserService {
 
     }
 
+    public boolean isEmailUnique(String email) {
+        return userRepository.findByEmail(email).isEmpty();
+    }
+
+    public boolean isNicknameUnique(String nickname) {
+        return userRepository.findByNickname(nickname).isEmpty();
+    }
+
 }

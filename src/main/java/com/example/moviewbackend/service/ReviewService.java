@@ -57,16 +57,15 @@ public class ReviewService {
         // 엔티티 업데이트
         review.update(requestDto);
 
-        // 별점 업데이트
         review.getMovie().updateStar();
 
-        return ResponseEntity.status(200).body(new ReviewResponseDto(review));
+      return ResponseEntity.status(200).body(new ReviewResponseDto(review));
     }
 
     public ResponseEntity<ReviewResponseDto> getReview(Long id) {
         // 리뷰 가져오기
         Review review = findReview(id);
-
+      
         return ResponseEntity.status(200).body(new ReviewResponseDto(review));
     }
 
@@ -81,8 +80,8 @@ public class ReviewService {
 
         reviewRepository.delete(review);
 
-        // 별점 업데이트
         Movie movie = review.getMovie();
+        // 별점 업데이트
         movie.updateStar();
 
         CommonResponseDto responseDto = CommonResponseDto.builder(HttpStatus.OK, "리뷰 삭제 성공").build();

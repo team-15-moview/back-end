@@ -41,7 +41,7 @@ public class Review extends Timestamped {
 
     @Column(nullable = false)
     @ColumnDefault("0")
-    private Integer likesCount;
+    private Integer likesCount = 0;
 
     public Review(NewReviewRequestDto requestDto, User user, Movie movie) {
         super();

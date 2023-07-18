@@ -18,6 +18,7 @@ public class MovieResponseDto {
     private String thumbnail;
     private String still;
     private float rate;
+    private float star;
 
     public MovieResponseDto(Movie movie) {
         this.movieId = movie.getId();
@@ -28,5 +29,6 @@ public class MovieResponseDto {
         this.thumbnail = movie.getThumbnail();
         this.still = movie.getStill();
         this.rate = movie.getRate();
+        this.star = movie.getStar();
     }
 }

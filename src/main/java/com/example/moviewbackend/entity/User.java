@@ -4,6 +4,9 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Entity
 @Getter
 @Table(name = "users")
@@ -29,6 +32,12 @@ public class User {
     @Column(nullable = false)
     @Enumerated(value = EnumType.STRING) // Enum 타입 저장할때 사용
     private UserRoleEnum role;
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE)
+    private List<Review> reviews = new ArrayList<>();
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE)
+    private List<Like> likes = new ArrayList<>();
 
     public User (String email, String password, String nickname, UserRoleEnum role) {
         this.email = email;

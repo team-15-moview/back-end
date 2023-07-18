@@ -87,6 +87,7 @@ public class ReviewService {
             throw new CustomResponseException(HttpStatus.FORBIDDEN, "작성자만 삭제할 수 있습니다.");
         }
 
+        movie.deleteReview(review); // 커밋전까지 삭제가 안되므로 직접 해주기
         reviewRepository.delete(review);
 
         // 별점 업데이트

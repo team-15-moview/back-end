@@ -61,6 +61,7 @@ public class WebSecurityConfig implements WebMvcConfigurer {
         // CSRF 설정
         http.csrf((csrf) -> csrf.disable());
 
+
         // 기본 설정인 Session 방식은 사용하지 않고 JWT 방식을 사용하기 위한 설정
         http.sessionManagement((sessionManagement) ->
                 sessionManagement.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
@@ -72,9 +73,13 @@ public class WebSecurityConfig implements WebMvcConfigurer {
                         .requestMatchers("/api/users/signup").permitAll()
                         .requestMatchers("/api/users/login").permitAll()
                         .requestMatchers(HttpMethod.GET, "/api/movies/**").permitAll()
+
                         .requestMatchers(HttpMethod.GET, "/api/reviews/**").permitAll()
+
                         .anyRequest().authenticated() // 그 외 모든 요청 인증처리
         );
+
+
 
         // 필터 관리
         http.addFilterBefore(jwtAuthorizationFilter(), JwtAuthenticationFilter.class);

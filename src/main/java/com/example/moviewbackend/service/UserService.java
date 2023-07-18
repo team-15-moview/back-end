@@ -35,6 +35,7 @@ public class UserService {
             throw new IllegalArgumentException("이미 존재하는 닉네임입니다.");
         }
 
+
         // 사용자 ROLE 확인
         UserRoleEnum role = UserRoleEnum.USER;
         if (requestDto.isAdmin()) {
@@ -59,4 +60,5 @@ public class UserService {
                 new IllegalArgumentException("해당하는 사용자가 존재하지 않습니다.")
         );
     }
+
 }

@@ -1,9 +1,6 @@
 package com.example.moviewbackend.controller;
 
-import com.example.moviewbackend.dto.CommonResponseDto;
-import com.example.moviewbackend.dto.NewReviewRequestDto;
-import com.example.moviewbackend.dto.ReviewRequestDto;
-import com.example.moviewbackend.dto.ReviewResponseDto;
+import com.example.moviewbackend.dto.*;
 import com.example.moviewbackend.security.UserDetailsImpl;
 import com.example.moviewbackend.service.ReviewService;
 import jakarta.validation.Valid;
@@ -12,6 +9,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/reviews")
@@ -33,8 +32,9 @@ public class ReviewController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<ReviewResponseDto> getReview(@PathVariable Long id) {
-        return reviewService.getReview(id);
+    public ResponseEntity<DetailReviewResponseDto> getReview(@AuthenticationPrincipal UserDetailsImpl userDetails,
+                                                             @PathVariable Long id) {
+        return reviewService.getReview(Optional.ofNullable(userDetails), id);
     }
 
     @DeleteMapping("/{id}")

@@ -27,12 +27,9 @@ public class User {
     @Column(nullable = false, unique = true)
     private String email;
 
-    @Column(nullable = true)
+    @Column
     @Enumerated(value = EnumType.STRING)
     private UserRoleEnum role;
-
-
-    private Long kakaoId;
   
     @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE)
     private List<Review> reviews = new ArrayList<>();
@@ -40,12 +37,14 @@ public class User {
     @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE)
     private List<Like> likes = new ArrayList<>();
 
+    private Long kakaoId;
+
     public User(String nickname, String password, String email, UserRoleEnum role, Long kakaoId) {
         this.nickname = nickname;
         this.password = password;
         this.email = email;
         this.role = role;
-        this.kakaoId =kakaoId;
+
     }
 
     public User(String email, String password, String nickname, UserRoleEnum role) {
@@ -56,7 +55,6 @@ public class User {
     }
 
     public User kakaoIdUpdate(Long kakaoId) {
-        this.kakaoId = kakaoId;
         return this;
     }
 }

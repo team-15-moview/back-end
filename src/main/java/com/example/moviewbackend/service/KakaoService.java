@@ -4,7 +4,6 @@ package com.example.moviewbackend.service;
 import com.example.moviewbackend.dto.KakaoUserInfoDto;
 import com.example.moviewbackend.entity.User;
 import com.example.moviewbackend.entity.UserRoleEnum;
-import com.example.moviewbackend.jwt.JwtUtil;
 import com.example.moviewbackend.repository.UserRepository;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
@@ -32,7 +31,7 @@ public class KakaoService {
     private final PasswordEncoder passwordEncoder;
     private final UserRepository userRepository;
     private final RestTemplate restTemplate;
-    private final JwtUtil jwtUtil;
+
 
     public String kakaoLogin(String code) {
         // 1. "인가 코드"로 "액세스 토큰" 요청
@@ -129,7 +128,7 @@ public class KakaoService {
 
 
     private User registerKakaoUserIfNeeded(KakaoUserInfoDto kakaoUserInfo) {
-        // DB 에 중복된 Kakao Id 가 있는지 확인
+        //DB 에 중복된 Kakao Id 가 있는지 확인
         Long kakaoId = kakaoUserInfo.getId();
         User kakaoUser = userRepository.findByKakaoId(kakaoId).orElse(null);
 

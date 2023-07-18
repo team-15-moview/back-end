@@ -14,15 +14,15 @@ import java.util.List;
 public class MovieController {
     private final MovieService movieService;
 
-    /**
-     * 영화 전체 조회
-     * - 개봉일 기준 내림차순
-     * @return MovieResponseDto 리스트 반환
-     */
-    @GetMapping
-    public List<MovieResponseDto> getMovies() {
-        return movieService.getMovies();
-    }
+//    /**
+//     * 영화 전체 조회
+//     * - 개봉일 기준 내림차순
+//     * @return MovieResponseDto 리스트 반환
+//     */
+//    @GetMapping
+//    public List<MovieResponseDto> getMovies() {
+//        return movieService.getMovies();
+//    }
 
     /**
      * 영화 상세 조회
@@ -35,10 +35,10 @@ public class MovieController {
 
     /**
      * 장르별 영화 조회
-     * @param genre
+     * @param genre 영화 장르
      * @return MovieResponseDto 리스트 반환
      */
-    @GetMapping("/query")
+    @GetMapping
     public List<MovieResponseDto> getMoviesByGenre(@RequestParam String genre) {
         return movieService.getMoviesByGenre(genre);
     }

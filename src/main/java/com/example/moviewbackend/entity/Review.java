@@ -1,10 +1,13 @@
 package com.example.moviewbackend.entity;
 
+import com.example.moviewbackend.dto.NewReviewRequestDto;
 import com.example.moviewbackend.dto.ReviewRequestDto;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.hibernate.annotations.ColumnDefault;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -36,7 +39,11 @@ public class Review extends Timestamped {
     @OneToMany(mappedBy = "review", cascade = CascadeType.REMOVE)
     private List<Like> likes = new ArrayList<>();
 
-    public Review(ReviewRequestDto requestDto, User user, Movie movie) {
+    @Column(nullable = false)
+    @ColumnDefault("0")
+    private Integer likesCount = 0;
+
+    public Review(NewReviewRequestDto requestDto, User user, Movie movie) {
         super();
         this.content = requestDto.getContent();
         this.star = requestDto.getStar();
@@ -47,5 +54,13 @@ public class Review extends Timestamped {
     public void update(ReviewRequestDto requestDto) {
         this.content = requestDto.getContent();
         this.star = requestDto.getStar();
+    }
+
+    public void updateLike(boolean add) {
+        if (add) {
+            this.likesCount++;
+        } else {
+            this.likesCount--;
+        }
     }
 }

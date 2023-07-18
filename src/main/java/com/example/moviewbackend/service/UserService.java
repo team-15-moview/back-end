@@ -18,11 +18,13 @@ public class UserService {
 
     private final JwtUtil jwtUtil;
 
+    // ADMIN_TOKEN
+    private final String ADMIN_TOKEN = "AAABnvxRVklrnYxKZ0aHgTBcXukeZygoC";
+
     public void signup(SignupRequestDto requestDto) {
         String email = requestDto.getEmail();
         String password = passwordEncoder.encode(requestDto.getPassword());
         String nickname = requestDto.getNickname();
-        UserRoleEnum role = requestDto.getRole();
 
         //이메일 중복 확인
         if (userRepository.findByEmail(email).isPresent()) {
@@ -33,6 +35,15 @@ public class UserService {
             throw new IllegalArgumentException("이미 존재하는 닉네임입니다.");
         }
 
+        // 사용자 ROLE 확인
+        UserRoleEnum role = UserRoleEnum.USER;
+        if (requestDto.isAdmin()) {
+            if (!ADMIN_TOKEN.equals(requestDto.getAdminToken())) {
+                throw new IllegalArgumentException("관리자 암호가 틀려 등록이 불가능합니다.");
+            }
+            role = UserRoleEnum.ADMIN;
+        }
+
         User user = new User(email, password, nickname, role);
         userRepository.save(user);
     }
@@ -41,8 +52,6 @@ public class UserService {
         userRepository.delete(user);
 
         //댓글, 리뷰, 좋아요 삭제 필요
-
-
     }
 
     protected User findUser(Long id) {

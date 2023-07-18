@@ -1,5 +1,6 @@
 package com.example.moviewbackend.jwt;
 
+import com.example.moviewbackend.dto.ApiResponseDto;
 import com.example.moviewbackend.dto.LoginRequestDto;
 import com.example.moviewbackend.entity.UserRoleEnum;
 import com.example.moviewbackend.security.UserDetailsImpl;
@@ -52,14 +53,26 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 
         String token = jwtUtil.createToken(username, role);
         jwtUtil.addJwtToCookie(token, response);
+
+        response.setStatus(200);
+        response.setContentType("application/json");
+        response.setCharacterEncoding("utf-8");
+        ApiResponseDto responseDto = new ApiResponseDto("로그인 성공");
+
+        String result = new ObjectMapper().writeValueAsString(responseDto);
+        response.getWriter().write(result);
     }
 
     @Override
     protected void unsuccessfulAuthentication(HttpServletRequest request, HttpServletResponse response, AuthenticationException failed) throws IOException, ServletException {
         log.info("로그인 실패");
-        response.setContentType("text/plain");
+        response.setStatus(401);
+        response.setContentType("application/json");
         response.setCharacterEncoding("utf-8");
-        response.getWriter().write("회원을 찾을 수 없습니다.");
-        response.setStatus(400);
+        ApiResponseDto responseDto = new ApiResponseDto("로그인 실패");
+
+        String result = new ObjectMapper().writeValueAsString(responseDto);
+        response.getWriter().write(result);
     }
 }
+

@@ -3,14 +3,16 @@ package com.example.moviewbackend.entity;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Getter
-@Setter
+@Table(name = "users")
 @NoArgsConstructor
-@Table(name = "user")
+
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -29,8 +31,14 @@ public class User {
     @Enumerated(value = EnumType.STRING)
     private UserRoleEnum role;
 
-    private Long kakaoId;
 
+    private Long kakaoId;
+  
+    @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE)
+    private List<Review> reviews = new ArrayList<>();
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE)
+    private List<Like> likes = new ArrayList<>();
 
     public User(String nickname, String password, String email, UserRoleEnum role, Long kakaoId) {
         this.nickname = nickname;
@@ -40,10 +48,11 @@ public class User {
         this.kakaoId =kakaoId;
     }
 
-    public User(String email, String password, String nickname) {
+    public User(String email, String password, String nickname, UserRoleEnum role) {
         this.password = password;
         this.email = email;
         this.nickname = nickname;
+        this.role = role;
     }
 
     public User kakaoIdUpdate(Long kakaoId) {
@@ -51,3 +60,4 @@ public class User {
         return this;
     }
 }
+

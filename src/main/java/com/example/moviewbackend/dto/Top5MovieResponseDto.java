@@ -14,14 +14,14 @@ public class Top5MovieResponseDto {
     private Long movieId;
     private String title;
     private String still;
-    private float star;
+    private float rate;
     private List<ReviewResponseDto> reviews;
 
     public Top5MovieResponseDto(Movie movie) {
         this.movieId = movie.getId();
         this.title = movie.getTitle();
         this.still = movie.getStill();
-        this.star = movie.getStar();
+        this.rate = movie.getRate();
         this.reviews = movie.getReviews()
                 .stream()
                 .map(ReviewResponseDto::new)

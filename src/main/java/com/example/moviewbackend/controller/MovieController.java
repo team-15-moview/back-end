@@ -2,11 +2,14 @@ package com.example.moviewbackend.controller;
 
 import com.example.moviewbackend.dto.MovieResponseDto;
 import com.example.moviewbackend.dto.Top5MovieResponseDto;
+import com.example.moviewbackend.security.UserDetailsImpl;
 import com.example.moviewbackend.service.MovieService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/movies")
@@ -29,8 +32,9 @@ public class MovieController {
      * @return id에 해당하는 MovieResponseDto 반환
      */
     @GetMapping("/{id}")
-    public MovieResponseDto getMovie(@PathVariable Long id) {
-        return movieService.getMovie(id);
+    public MovieResponseDto getMovie(@AuthenticationPrincipal UserDetailsImpl userDetails,
+                                     @PathVariable Long id) {
+        return movieService.getMovie(Optional.ofNullable(userDetails), id);
     }
 
     /**

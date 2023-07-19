@@ -29,9 +29,13 @@ public class ReviewService {
 
     @Transactional
     public ResponseEntity<ReviewResponseDto> createReview(User user, NewReviewRequestDto requestDto) {
+        // 해당 영화에 대한 리뷰를 이미 작성했는지 확인 필요
+        if (reviewRepository.existsByUserIdAndMovieId(user.getId(), requestDto.getMovieId())) {
+            throw new IllegalArgumentException("해당 영화에 대한 사용자의 리뷰가 이미 존재합니다.");
+        }
+
         // 영화 가져오기
         Movie movie = movieService.findMovie(requestDto.getMovieId());
-
         // 리뷰 생성
         Review review = new Review(requestDto, user, movie);
 

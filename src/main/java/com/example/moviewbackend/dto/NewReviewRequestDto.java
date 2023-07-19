@@ -17,6 +17,6 @@ public class NewReviewRequestDto {
     private String content;
     @NotNull
     @DecimalMin(value = "0.5")
-    @DecimalMax(value = "10.0")
+    @DecimalMax(value = "5.0")
     private float star;
 }

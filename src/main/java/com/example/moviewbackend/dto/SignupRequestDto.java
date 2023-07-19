@@ -1,6 +1,5 @@
 package com.example.moviewbackend.dto;
 
-import com.example.moviewbackend.entity.UserRoleEnum;
 import jakarta.validation.constraints.Pattern;
 import lombok.Getter;
 import lombok.Setter;

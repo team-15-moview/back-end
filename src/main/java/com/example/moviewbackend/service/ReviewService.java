@@ -72,12 +72,15 @@ public class ReviewService {
         Review review = findReview(id);
 
         boolean likeByUser = false;
+        boolean isAuthor = false;
         if (userDetails.isPresent()) { // 만약 사용자가 로그인한 상태면
             // 현재 접속한 사용자가 해당 리뷰에 좋아요를 누른 상태인지 확인
             likeByUser = likeRepository.existsByUserAndReview(userDetails.get().getUser(), review);
+            // 현재 접속자가 작성자인지 확인
+            isAuthor = userDetails.get().getUser().getId().equals(review.getUser().getId());
         }
 
-        return ResponseEntity.status(200).body(new DetailReviewResponseDto(review, likeByUser));
+        return ResponseEntity.status(200).body(new DetailReviewResponseDto(review, likeByUser, isAuthor));
     }
 
     @Transactional

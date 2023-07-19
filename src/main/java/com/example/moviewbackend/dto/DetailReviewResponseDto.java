@@ -15,7 +15,7 @@ public class DetailReviewResponseDto {
     private Long reviewId;
     private String content;
     private int likesCount;
-    //    private int commentsCount;
+    private int commentsCount;
     private float star;
     private boolean likeByUser; // 현재 접속자가 좋아요 누른 여부
     private MovieDto movie;
@@ -26,6 +26,7 @@ public class DetailReviewResponseDto {
         this.reviewId = review.getId();
         this.content = review.getContent();
         this.likesCount = review.getLikesCount();
+        this.commentsCount = review.getCommentsCount();
         this.star = review.getStar();
         this.movie = new MovieDto(review.getMovie());
     }

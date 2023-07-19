@@ -37,17 +37,14 @@ public class Movie {
     private String still;
 
     @Column(nullable = false)
-    private Float rate;
-
-    @Column(nullable = false)
     @ColumnDefault("0.0")
-    private Float star;
+    private Float rate; // 평균 별점
 
     @OneToMany(mappedBy = "movie", cascade = CascadeType.REMOVE)
     private List<Review> reviews = new ArrayList<>();
 
     public void updateStar() {
-        this.star = (float) reviews.stream()
+        this.rate = (float) reviews.stream()
                 .mapToDouble(Review::getStar)
                 .sum()/ reviews.size();
     }

@@ -11,4 +11,8 @@ public interface ReviewRepository extends JpaRepository<Review, Long> {
     Page<Review> findByMovieIdAndIdLessThanOrderByIdDesc(Long movieId, Long lastReviewId, Pageable pageable);
 
     Optional<Review> findById(Long reviewId);
+
+    Optional<Review> findByMovieIdAndUserId(Long movieId, Long userId);
+
+    boolean existsByUserIdAndMovieId(Long id, Long movieId);
 }

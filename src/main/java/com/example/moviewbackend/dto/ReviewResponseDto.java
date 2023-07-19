@@ -13,7 +13,7 @@ public class ReviewResponseDto {
     private String nickname;
     private String content;
     private int likesCount;
-//    private int commentsCount;
+    private int commentsCount;
     private float star;
 
     public ReviewResponseDto(Review review) {
@@ -22,6 +22,7 @@ public class ReviewResponseDto {
         this.nickname = review.getUser().getNickname();
         this.content = review.getContent();
         this.likesCount = review.getLikesCount();
+        this.commentsCount = review.getCommentsCount();
         this.star = review.getStar();
     }
 }

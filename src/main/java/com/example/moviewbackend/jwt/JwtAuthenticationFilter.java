@@ -2,6 +2,7 @@ package com.example.moviewbackend.jwt;
 
 import com.example.moviewbackend.dto.ApiResponseDto;
 import com.example.moviewbackend.dto.LoginRequestDto;
+import com.example.moviewbackend.dto.LoginResponseDto;
 import com.example.moviewbackend.entity.UserRoleEnum;
 import com.example.moviewbackend.security.UserDetailsImpl;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -48,8 +49,9 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
     @Override
     protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain, Authentication authResult) throws IOException, ServletException {
         log.info("로그인 성공 및 JWT 생성");
-        String username = ((UserDetailsImpl) authResult.getPrincipal()).getUsername();
-        UserRoleEnum role = ((UserDetailsImpl) authResult.getPrincipal()).getUser().getRole();
+        UserDetailsImpl userDetails = ((UserDetailsImpl) authResult.getPrincipal());
+        String username = userDetails.getUsername();
+        UserRoleEnum role = userDetails.getUser().getRole();
 
         String token = jwtUtil.createToken(username, role);
         response.addHeader(JwtUtil.AUTHORIZATION_HEADER, token);
@@ -57,7 +59,7 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
         response.setStatus(200);
         response.setContentType("application/json");
         response.setCharacterEncoding("utf-8");
-        ApiResponseDto responseDto = new ApiResponseDto("로그인 성공");
+        LoginResponseDto responseDto = new LoginResponseDto(userDetails.getUser().getNickname(), "로그인 성공");
 
         String result = new ObjectMapper().writeValueAsString(responseDto);
         response.getWriter().write(result);
@@ -69,9 +71,8 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
         response.setStatus(401);
         response.setContentType("application/json");
         response.setCharacterEncoding("utf-8");
-        ApiResponseDto responseDto = new ApiResponseDto("로그인 실패");
 
-        String result = new ObjectMapper().writeValueAsString(responseDto);
+        String result = new ObjectMapper().writeValueAsString(new ApiResponseDto("로그인 실패"));
         response.getWriter().write(result);
     }
 }

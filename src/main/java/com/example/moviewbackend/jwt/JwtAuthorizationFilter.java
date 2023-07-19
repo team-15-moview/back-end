@@ -36,9 +36,6 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
         String tokenValue = jwtUtil.getTokenFromRequest(req);
 
         if (StringUtils.hasText(tokenValue)) {
-            // JWT 토큰 substring
-            tokenValue = jwtUtil.substringToken(tokenValue);
-            log.info(tokenValue);
 
             if (!jwtUtil.validateToken(tokenValue)) {
                 log.error("검증되지 않은 토큰입니다.");

@@ -17,17 +17,19 @@ public class DetailReviewResponseDto {
     private int likesCount;
     private int commentsCount;
     private float star;
-    private boolean likeByUser; // 현재 접속자가 좋아요 누른 여부
+    private Boolean likeByUser; // 현재 접속자가 좋아요 누른 여부
+    private Boolean isAuthor; // 현재 접속자가 작성자인지 여부
     private MovieDto movie;
 
-    public DetailReviewResponseDto(Review review, Boolean likeByUser) {
+    public DetailReviewResponseDto(Review review, boolean likeByUser, boolean isAuthor) {
         this.author = review.getUser().getNickname();
-        this.likeByUser = likeByUser;
         this.reviewId = review.getId();
         this.content = review.getContent();
         this.likesCount = review.getLikesCount();
         this.commentsCount = review.getCommentsCount();
         this.star = review.getStar();
+        this.likeByUser = likeByUser;
+        this.isAuthor = isAuthor;
         this.movie = new MovieDto(review.getMovie());
     }
 

@@ -16,29 +16,34 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/api/reviews/{reviewId}/comments")
 @RequiredArgsConstructor
 public class CommentController {
-
-
     private final CommentService commentService;
 
     @PostMapping
-    public ResponseEntity<CommentResponseDto> createComment(@AuthenticationPrincipal UserDetailsImpl userDetails, @PathVariable Long reviewId, @Valid @RequestBody CommentRequestDto requestDto) {
+    public ResponseEntity<CommentResponseDto> createComment(@AuthenticationPrincipal UserDetailsImpl userDetails,
+                                                            @PathVariable Long reviewId,
+                                                            @Valid @RequestBody CommentRequestDto requestDto) {
         return commentService.createComment(userDetails.getUser(), reviewId, requestDto);
     }
 
     @PutMapping("/{commentId}")
-    public ResponseEntity<CommentResponseDto> updateComment(@AuthenticationPrincipal UserDetailsImpl userDetails, @PathVariable Long reviewId, @PathVariable Long commentId) {
-        return commentService.updateComment(userDetails.getUser(), reviewId, commentId);
+    public ResponseEntity<CommentResponseDto> updateComment(@AuthenticationPrincipal UserDetailsImpl userDetails,
+                                                            @PathVariable Long reviewId,
+                                                            @PathVariable Long commentId,
+                                                            @Valid @RequestBody CommentRequestDto requestDto) {
+        return commentService.updateComment(userDetails.getUser(), reviewId, commentId, requestDto);
     }
 
     @DeleteMapping("/{commentId}")
-    public ResponseEntity<ApiResponseDto> deleteComment(@AuthenticationPrincipal UserDetailsImpl userDetails, @PathVariable Long reviewId, @PathVariable Long commentId) {
-        commentService.deleteComment(userDetails.getUser(), commentId);
+    public ResponseEntity<ApiResponseDto> deleteComment(@AuthenticationPrincipal UserDetailsImpl userDetails,
+                                                        @PathVariable Long reviewId,
+                                                        @PathVariable Long commentId) {
+        commentService.deleteComment(userDetails.getUser(), reviewId, commentId);
         return ResponseEntity.ok().body(new ApiResponseDto("댓글이 삭제 성공"));
     }
 
-
-    public Page<CommentResponseDto> getAllComments(@RequestParam Long reviewId, @RequestParam Long lastCommentId, @RequestParam int size) {
-        return commentService.getAllComments(reviewId, lastCommentId, size);
+    @GetMapping
+    public Page<CommentResponseDto> getComments(@PathVariable Long reviewId, @RequestParam Long lastCommentId, @RequestParam int size) {
+        return commentService.getComments(reviewId, lastCommentId, size);
     }
 }
 

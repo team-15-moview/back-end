@@ -113,7 +113,7 @@ public class ReviewService {
                 .build();
 
         likeRepository.save(like);
-        review.updateLike(true);
+        review.updateLikesCount(true);
 
         return ResponseEntity.ok(new ReviewResponseDto(review));
     }
@@ -128,7 +128,7 @@ public class ReviewService {
         );
 
         likeRepository.delete(like);
-        review.updateLike(false);
+        review.updateLikesCount(false);
 
         return ResponseEntity.ok(new ReviewResponseDto(review));
     }

@@ -39,11 +39,15 @@ public class Review extends Timestamped {
     private List<Like> likes = new ArrayList<>();
 
     @OneToMany(mappedBy = "review", cascade = CascadeType.REMOVE)
-    private List<Comment> Comments = new ArrayList<>();
+    private List<Comment> comments = new ArrayList<>();
 
     @Column(nullable = false)
     @ColumnDefault("0")
     private Integer likesCount = 0;
+
+    @Column(nullable = false)
+    @ColumnDefault("0")
+    private Integer commentsCount = 0;
 
     public Review(NewReviewRequestDto requestDto, User user, Movie movie) {
         super();
@@ -58,11 +62,19 @@ public class Review extends Timestamped {
         this.star = requestDto.getStar();
     }
 
-    public void updateLike(boolean add) {
+    public void updateLikesCount(boolean add) {
         if (add) {
             this.likesCount++;
         } else {
             this.likesCount--;
+        }
+    }
+
+    public void updateCommentsCount(boolean add) {
+        if (add) {
+            this.commentsCount++;
+        } else {
+            this.commentsCount--;
         }
     }
 }

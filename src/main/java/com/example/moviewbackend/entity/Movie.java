@@ -50,6 +50,10 @@ public class Movie {
     }
 
     public void deleteStar(Float star){
-        this.rate = (this.rate * this.reviews.size() - star)/(this.reviews.size()-1);
+        if (this.reviews.size() == 1) {
+            this.rate = 0F;
+        } else {
+            this.rate = (this.rate * this.reviews.size() - star)/(this.reviews.size()-1);
+        }
     }
 }

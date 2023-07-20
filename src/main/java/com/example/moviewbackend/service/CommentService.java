@@ -3,6 +3,7 @@ package com.example.moviewbackend.service;
 import com.example.moviewbackend.dto.CommentDto;
 import com.example.moviewbackend.dto.CommentRequestDto;
 import com.example.moviewbackend.dto.CommentResponseDto;
+import com.example.moviewbackend.dto.CommonResponseDto;
 import com.example.moviewbackend.entity.Comment;
 import com.example.moviewbackend.entity.Review;
 import com.example.moviewbackend.entity.User;
@@ -57,7 +58,7 @@ public class CommentService {
     }
 
     @Transactional
-    public void deleteComment(User user, Long reviewId, Long commentId) {
+    public ResponseEntity<CommonResponseDto> deleteComment(User user, Long reviewId, Long commentId) {
         Comment comment = findComment(commentId);
 
         // 작성자 맞는지 확인
@@ -68,6 +69,12 @@ public class CommentService {
         commentRepository.deleteById(commentId);
         Review review = reviewService.findReview(reviewId);
         review.updateCommentsCount(false);
+
+        CommonResponseDto responseDto = CommonResponseDto.builder()
+                .status(HttpStatus.OK)
+                .message("댓글 삭제 성공")
+                .build();
+        return ResponseEntity.ok().body(responseDto);
     }
 
     public Page<CommentResponseDto> getComments(Long reviewId, Long lastCommentId, int size) {

@@ -1,9 +1,8 @@
 package com.example.moviewbackend.dto;
 
 import lombok.Getter;
-import lombok.Setter;
 
-@Setter
+
 @Getter
 public class CommentDto {
 
@@ -19,6 +18,4 @@ public class CommentDto {
         this.nickname = nickname;
         this.content = content;
     }
-
-
 }

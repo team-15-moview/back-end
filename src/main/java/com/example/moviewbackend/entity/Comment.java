@@ -2,13 +2,14 @@ package com.example.moviewbackend.entity;
 
 import com.example.moviewbackend.dto.CommentRequestDto;
 import jakarta.persistence.*;
+import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Entity
 @Getter
 @Table(name = "comments")
-@NoArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Comment extends Timestamped {
     @Id
     @Column(name = "comment_id")

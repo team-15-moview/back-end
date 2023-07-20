@@ -1,6 +1,6 @@
 package com.example.moviewbackend.jwt;
 
-import com.example.moviewbackend.dto.ApiResponseDto;
+import com.example.moviewbackend.dto.CommonResponseDto;
 import com.example.moviewbackend.dto.LoginRequestDto;
 import com.example.moviewbackend.dto.LoginResponseDto;
 import com.example.moviewbackend.entity.UserRoleEnum;
@@ -71,8 +71,10 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
         response.setStatus(401);
         response.setContentType("application/json");
         response.setCharacterEncoding("utf-8");
-
-        String result = new ObjectMapper().writeValueAsString(new ApiResponseDto("로그인 실패"));
+        CommonResponseDto responseDto = CommonResponseDto.builder()
+                .message("로그인 실패")
+                .build();
+        String result = new ObjectMapper().writeValueAsString(responseDto);
         response.getWriter().write(result);
     }
 }

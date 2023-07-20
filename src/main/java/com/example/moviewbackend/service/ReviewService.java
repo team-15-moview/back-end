@@ -100,7 +100,10 @@ public class ReviewService {
         // 별점 업데이트
         movie.updateStar();
 
-        CommonResponseDto responseDto = CommonResponseDto.builder(HttpStatus.OK, "리뷰 삭제 성공").build();
+        CommonResponseDto responseDto = CommonResponseDto.builder()
+                .status(HttpStatus.OK)
+                .message("리뷰 삭제 성공")
+                .build();
         return ResponseEntity.status(responseDto.getStatus()).body(responseDto);
     }
 
@@ -131,7 +134,7 @@ public class ReviewService {
         Review review = findReview(id);
         // 좋아요 가져오기
         Like like = likeRepository.findByUserAndReview(user, review).orElseThrow(() ->
-                new IllegalArgumentException("선택한 좋아요는 존재하지 않습니다.")
+                new NullPointerException("선택한 좋아요는 존재하지 않습니다.")
         );
 
         likeRepository.delete(like);
@@ -149,7 +152,7 @@ public class ReviewService {
 
     protected Review findReview(Long id) {
         return reviewRepository.findById(id).orElseThrow(() ->
-                new IllegalArgumentException("선택한 리뷰가 존재하지 않습니다.")
+                new NullPointerException("선택한 리뷰가 존재하지 않습니다.")
         );
     }
 }

@@ -18,12 +18,6 @@ import java.util.Optional;
 public class MovieService {
     private final MovieRepository movieRepository;
     private final ReviewRepository reviewRepository;
-    public List<MovieResponseDto> getMovies() {
-        return movieRepository.findAllByOrderByOpenDateDesc()
-                .stream()
-                .map(MovieResponseDto::new)
-                .toList();
-    }
 
     public MovieResponseDto getMovie(Optional<UserDetailsImpl> userDetails, Long id) {
         if (userDetails.isPresent()) { // 현재 접속한 사용자가 있고
@@ -53,7 +47,7 @@ public class MovieService {
 
     protected Movie findMovie(Long id) {
         return movieRepository.findById(id).orElseThrow(() ->
-                new IllegalArgumentException("선택한 영화는 존재하지 않습니다.")
+                new NullPointerException("선택한 영화는 존재하지 않습니다.")
         );
     }
 }

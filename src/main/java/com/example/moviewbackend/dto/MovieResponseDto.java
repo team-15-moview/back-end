@@ -23,6 +23,7 @@ public class MovieResponseDto {
     private String thumbnail;
     private String still;
     private Float rate;
+    private Long reviewId;
     private Float star;
 
     public MovieResponseDto(Movie movie) {
@@ -36,8 +37,9 @@ public class MovieResponseDto {
         this.rate = movie.getRate();
     }
 
-    public MovieResponseDto(Movie movie, Float star) {
+    public MovieResponseDto(Movie movie, Long reviewId, Float star) {
         this.movieId = movie.getId();
+        this.reviewId = reviewId;
         this.title = movie.getTitle();
         this.openDate = movie.getOpenDate();
         this.director = movie.getDirector();

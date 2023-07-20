@@ -24,7 +24,7 @@ public class MovieService {
             Optional<Review> review = reviewRepository.findByMovieIdAndUserId(id, userDetails.get().getUser().getId());
             if (review.isPresent()) { // 해당 영화에 대한 리뷰가 있다면
                 Float star = review.get().getStar();
-                return new MovieResponseDto(findMovie(id), star); // 별점 포함시키기
+                return new MovieResponseDto(findMovie(id), review.get().getId(), star); // id, 별점 포함시키기
             }
         }
         return new MovieResponseDto(findMovie(id));

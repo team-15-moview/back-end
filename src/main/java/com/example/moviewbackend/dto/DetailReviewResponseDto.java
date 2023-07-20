@@ -9,8 +9,8 @@ import lombok.Getter;
 @Getter
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
 public class DetailReviewResponseDto {
-    private String author;
     private Long reviewId;
+    private String author;
     private String content;
     private int likesCount;
     private int commentsCount;
@@ -20,8 +20,8 @@ public class DetailReviewResponseDto {
     private MovieResponseDto movie;
 
     public DetailReviewResponseDto(Review review, boolean likeByUser, boolean isAuthor) {
-        this.author = review.getUser().getNickname();
         this.reviewId = review.getId();
+        this.author = review.getUser().getNickname();
         this.content = review.getContent();
         this.likesCount = review.getLikesCount();
         this.commentsCount = review.getCommentsCount();

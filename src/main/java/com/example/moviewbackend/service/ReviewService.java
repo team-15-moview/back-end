@@ -88,17 +88,16 @@ public class ReviewService {
         // 리뷰 가져오기
         Review review = findReview(id);
         Movie movie = review.getMovie();
+        // 별점 업데이트
+        Float star = review.getStar();
+        movie.deleteStar(star);
 
         // 작성자 맞는지 확인
         if (!review.getUser().getId().equals(user.getId())) {
             throw new CustomResponseException(HttpStatus.FORBIDDEN, "작성자만 삭제할 수 있습니다.");
         }
 
-        movie.deleteReview(review); // 커밋전까지 삭제가 안되므로 직접 해주기
         reviewRepository.delete(review);
-
-        // 별점 업데이트
-        movie.updateStar();
 
         CommonResponseDto responseDto = CommonResponseDto.builder()
                 .status(HttpStatus.OK)

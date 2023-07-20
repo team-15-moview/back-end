@@ -49,7 +49,7 @@ public class Movie {
                 .sum()/ reviews.size();
     }
 
-    public void deleteReview(Review review){
-        this.reviews.remove(review);
+    public void deleteStar(Float star){
+        this.rate = (this.rate * this.reviews.size() - star)/(this.reviews.size()-1);
     }
 }

@@ -1,36 +1,21 @@
 package com.example.moviewbackend.dto;
 
-import lombok.Builder;
-import lombok.Getter;
+import lombok.*;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.HttpStatusCode;
 
 import java.time.LocalDateTime;
 
 @Getter
-@Builder(builderMethodName = "innerBuilder")
+@Builder
+@AllArgsConstructor(access = AccessLevel.PROTECTED)
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class CommonResponseDto {
-
     LocalDateTime timestamp;
     HttpStatus status;
     String message;
     String path;
-
-
-    public static CommonResponseDtoBuilder builder(Integer status, String error) {
-        return innerBuilder().timestamp(LocalDateTime.now())
-                .status(HttpStatus.valueOf(status))
-                .message(error);
-    }
-    public static CommonResponseDtoBuilder builder(HttpStatus status, String error) {
-        return innerBuilder().timestamp(LocalDateTime.now())
-                .status(status)
-                .message(error);
-    }
-    public static CommonResponseDtoBuilder builder(HttpStatusCode status, String error) {
-        return innerBuilder().timestamp(LocalDateTime.now())
-                .status(HttpStatus.valueOf(status.value()))
-                .message(error);
+    public CommonResponseDto(String message) {
+        this.message = message;
     }
 }
 /*

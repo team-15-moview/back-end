@@ -17,16 +17,6 @@ import java.util.Optional;
 public class MovieController {
     private final MovieService movieService;
 
-//    /**
-//     * 영화 전체 조회
-//     * - 개봉일 기준 내림차순
-//     * @return MovieResponseDto 리스트 반환
-//     */
-//    @GetMapping
-//    public List<MovieResponseDto> getMovies() {
-//        return movieService.getMovies();
-//    }
-
     /**
      * 영화 상세 조회
      * @return id에 해당하는 MovieResponseDto 반환

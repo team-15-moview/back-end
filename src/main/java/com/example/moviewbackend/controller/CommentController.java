@@ -1,8 +1,8 @@
 package com.example.moviewbackend.controller;
 
-import com.example.moviewbackend.dto.ApiResponseDto;
 import com.example.moviewbackend.dto.CommentRequestDto;
 import com.example.moviewbackend.dto.CommentResponseDto;
+import com.example.moviewbackend.dto.CommonResponseDto;
 import com.example.moviewbackend.security.UserDetailsImpl;
 import com.example.moviewbackend.service.CommentService;
 import jakarta.validation.Valid;
@@ -34,15 +34,16 @@ public class CommentController {
     }
 
     @DeleteMapping("/{commentId}")
-    public ResponseEntity<ApiResponseDto> deleteComment(@AuthenticationPrincipal UserDetailsImpl userDetails,
-                                                        @PathVariable Long reviewId,
-                                                        @PathVariable Long commentId) {
-        commentService.deleteComment(userDetails.getUser(), reviewId, commentId);
-        return ResponseEntity.ok().body(new ApiResponseDto("댓글이 삭제 성공"));
+    public ResponseEntity<CommonResponseDto> deleteComment(@AuthenticationPrincipal UserDetailsImpl userDetails,
+                                                           @PathVariable Long reviewId,
+                                                           @PathVariable Long commentId) {
+        return commentService.deleteComment(userDetails.getUser(), reviewId, commentId);
     }
 
     @GetMapping
-    public Page<CommentResponseDto> getComments(@PathVariable Long reviewId, @RequestParam Long lastCommentId, @RequestParam int size) {
+    public Page<CommentResponseDto> getComments(@PathVariable Long reviewId,
+                                                @RequestParam Long lastCommentId,
+                                                @RequestParam int size) {
         return commentService.getComments(reviewId, lastCommentId, size);
     }
 }

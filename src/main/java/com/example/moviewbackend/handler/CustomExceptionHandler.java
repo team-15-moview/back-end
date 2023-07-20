@@ -4,39 +4,49 @@ import com.example.moviewbackend.dto.CommonResponseDto;
 import com.example.moviewbackend.exception.CustomResponseException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.http.converter.HttpMessageNotReadableException;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
-import org.springframework.web.bind.MissingRequestCookieException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 @RestControllerAdvice
 public class CustomExceptionHandler {
-
-    @ExceptionHandler(IllegalArgumentException.class)
-    public ResponseEntity<CommonResponseDto> handleIllegalArgumentException(IllegalArgumentException exception) {
-        CommonResponseDto responseDto = CommonResponseDto.builder(HttpStatus.BAD_REQUEST, exception.getMessage()).build();
+    @ExceptionHandler(UsernameNotFoundException.class)
+    public ResponseEntity<CommonResponseDto> handleUsernameNotFoundException(UsernameNotFoundException exception) {
+        CommonResponseDto responseDto = CommonResponseDto.builder()
+                .status(HttpStatus.BAD_REQUEST)
+                .message(exception.getMessage())
+                .build();
 
         return ResponseEntity.status(responseDto.getStatus()).body(responseDto);
     }
+    @ExceptionHandler(NullPointerException.class)
+    public ResponseEntity<CommonResponseDto> handleNullPointerException(NullPointerException exception) {
+        CommonResponseDto responseDto = CommonResponseDto.builder()
+                .status(HttpStatus.BAD_REQUEST)
+                .message(exception.getMessage())
+                .build();
 
-    @ExceptionHandler(MissingRequestCookieException.class)
-    public ResponseEntity<CommonResponseDto> handleIllegalArgumentException(MissingRequestCookieException exception) {
-        CommonResponseDto responseDto = CommonResponseDto.builder(HttpStatus.BAD_REQUEST, "토큰이 유효하지 않습니다.").build();
+        return ResponseEntity.status(responseDto.getStatus()).body(responseDto);
+    }
+    @ExceptionHandler(IllegalArgumentException.class)
+    public ResponseEntity<CommonResponseDto> handleIllegalArgumentException(IllegalArgumentException exception) {
+        CommonResponseDto responseDto = CommonResponseDto.builder()
+                .status(HttpStatus.BAD_REQUEST)
+                .message(exception.getMessage())
+                .build();
+
         return ResponseEntity.status(responseDto.getStatus()).body(responseDto);
     }
 
     @ExceptionHandler(CustomResponseException.class)
     public ResponseEntity<CommonResponseDto> handleCustomRequestException(CustomResponseException exception) {
-        CommonResponseDto responseDto = CommonResponseDto.builder(exception.getStatus(), exception.getMessage()).build();
-        return ResponseEntity.status(responseDto.getStatus()).body(responseDto);
-    }
-
-    @ExceptionHandler(HttpMessageNotReadableException.class)
-    public ResponseEntity<CommonResponseDto> handleHttpMessageNotReadableException(HttpMessageNotReadableException exception) {
-        CommonResponseDto responseDto = CommonResponseDto.builder(HttpStatus.BAD_REQUEST, "JSON Request Error").build();
+        CommonResponseDto responseDto = CommonResponseDto.builder()
+                .status(exception.getStatus())
+                .message(exception.getMessage())
+                .build();
         return ResponseEntity.status(responseDto.getStatus()).body(responseDto);
     }
 

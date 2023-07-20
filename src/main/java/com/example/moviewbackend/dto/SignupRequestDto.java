@@ -2,12 +2,10 @@ package com.example.moviewbackend.dto;
 
 import jakarta.validation.constraints.Pattern;
 import lombok.Getter;
-import lombok.Setter;
 
 @Getter
-@Setter
 public class SignupRequestDto {
-    @Pattern(regexp = "^[a-z0-9ㄱ-ㅎ가-힣]{4,10}$",
+    @Pattern(regexp = "^[a-z0-9가-힣]{4,10}$",
             message = "닉네임은 최소 4자 이상, 10자 이하이며 알파벳 소문자 혹은 한글, 숫자(0~9) 로 구성되어야 합니다.")
     private String nickname;
 

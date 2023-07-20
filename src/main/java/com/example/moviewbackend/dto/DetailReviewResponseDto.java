@@ -36,12 +36,14 @@ public class DetailReviewResponseDto {
     @Getter
     @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
     static class MovieDto {
+        private Long id;
         private String title;
         private LocalDate openDate;
         private String director;
         private String thumbnail;
 
         public MovieDto(Movie movie) {
+            this.id = movie.getId();
             this.title = movie.getTitle();
             this.openDate = movie.getOpenDate();
             this.director = movie.getDirector();
